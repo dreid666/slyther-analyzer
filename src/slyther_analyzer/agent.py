@@ -4,7 +4,8 @@ from pathlib import Path
 import os
 import subprocess
 
-from .sarif import dumps_sarif
+from .logging import audit
+
 from .scanner import Finding, scan_path
 
 
@@ -99,10 +100,24 @@ def markdown_summary(findings: list[Finding]) -> str:
 def write_github_outputs(output_path: str, findings: list[Finding]) -> None:
     github_output = os.getenv("GITHUB_OUTPUT")
     if not github_output:
+        audit(
+            "agent.github_outputs",
+            "success",
+            findings=len(findings),
+            output=output_path,
+            metadata={"destination": "none"},
+        )
         return
     with open(github_output, "a", encoding="utf-8") as handle:
         handle.write(f"sarif={output_path}\n")
         handle.write(f"findings={len(findings)}\n")
+    audit(
+        "agent.github_outputs",
+        "success",
+        findings=len(findings),
+        output=output_path,
+        metadata={"destination": github_output},
+    )
 
 
 def write_github_summary(findings: list[Finding]) -> None:

@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
+from .logging import audit
 from .agent import (
     emit_github_annotations,
     markdown_summary,
@@ -28,6 +29,7 @@ def build_parser() -> argparse.ArgumentParser:
     scan.add_argument("target", help="source file or directory")
     scan.add_argument("--format", choices=("sarif", "text"), default="text")
     scan.add_argument("--output", help="write results to this file")
+    scan.add_argument("--log-file", help="append structured audit records")
 
     agent = subcommands.add_parser(
         "agent",
@@ -52,6 +54,7 @@ def build_parser() -> argparse.ArgumentParser:
         default="warning",
         help="exit non-zero when findings meet this severity",
     )
+    agent.add_argument("--log-file", help="append structured audit records")
     return parser
 
 
@@ -60,6 +63,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "scan":
         target = Path(args.target)
         if not target.exists():
+            audit("cli.scan", "failure", target=str(target), error="target does not exist", log_file=getattr(args, "log_file", None))
             print(f"error: target does not exist: {target}", file=sys.stderr)
             return 2
 
@@ -81,10 +85,21 @@ def main(argv: list[str] | None = None) -> int:
             output.write_text(rendered, encoding="utf-8")
         else:
             sys.stdout.write(rendered)
-        return 1 if findings else 0
+        status = 1 if findings else 0
+        audit(
+            "cli.scan",
+            "success",
+            target=str(target),
+            findings=len(findings),
+            output=str(output) if args.output else None,
+            metadata={"format": args.format, "exit_code": status},
+            log_file=args.log_file,
+        )
+        return status
     if args.command == "agent":
         target = Path(args.target)
         if not target.exists():
+            audit("cli.agent", "failure", target=str(target), error="target does not exist", log_file=args.log_file)
             print(f"error: target does not exist: {target}", file=sys.stderr)
             return 2
 
@@ -106,5 +121,15 @@ def main(argv: list[str] | None = None) -> int:
         should_fail = args.fail_on != "none" and bool(findings)
         if should_fail and args.fail_on == "error":
             should_fail = any(finding.level == "error" for finding in findings)
-        return 1 if should_fail else 0
+        status = 1 if should_fail else 0
+        audit(
+            "cli.agent",
+            "success",
+            target=str(target),
+            findings=len(findings),
+            output=str(output),
+            metadata={"changed_only": args.changed_only, "exit_code": status},
+            log_file=args.log_file,
+        )
+        return status
     return 0

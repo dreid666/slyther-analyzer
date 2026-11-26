@@ -128,3 +128,30 @@ def test_mcp_agent_status_and_scan(tmp_path):
     assert status["name"] == "Slyther Security Agent"
     assert result["findings"][0]["rule_id"] == "SLYTHER-EVM-001"
     assert result["sarif"]["runs"][0]["results"]
+
+
+def test_audit_log_verifies_target_and_output(tmp_path):
+    from slyther_analyzer.cli import main
+
+    target = tmp_path / "Treasury.sol"
+    target.write_text("tx.origin;", encoding="utf-8")
+    output = tmp_path / "results.sarif"
+    log_file = tmp_path / "audit.jsonl"
+
+    assert main([
+        "scan",
+        str(target),
+        "--format",
+        "sarif",
+        "--output",
+        str(output),
+        "--log-file",
+        str(log_file),
+    ]) == 1
+
+    record = json.loads(log_file.read_text(encoding="utf-8").strip())
+    assert record["verified"] is True
+    assert record["status"] == "success"
+    assert len(record["target_sha256"]) == 64
+    assert len(record["output_sha256"]) == 64
+    assert record["findings"] == 1

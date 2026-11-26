@@ -45,6 +45,19 @@ slyther-analyzer-mcp
 VS Code discovers the workspace server from `.vscode/mcp.json`. The server exposes
 `scan_target`, `scan_changed_files`, and `agent_status` tools.
 
+## Verified audit logging
+
+All CLI, GitHub Agent, and MCP scan operations write structured JSON audit records.
+Set `SLYTHER_AUDIT_LOG=/path/to/audit.jsonl`, or pass `--log-file` to a CLI command:
+
+```bash
+slyther-analyzer scan benchmarks --log-file audit.jsonl
+slyther-analyzer agent benchmarks --log-file audit.jsonl
+```
+
+Records include UTC timestamps, operation/status, target and output SHA-256 hashes,
+finding counts, and a `verified` success marker.
+
 ## Layout
 
 - `src/slyther_analyzer/` — CLI entry point, heuristic rule scanner, and SARIF v2.1.0 emitter.
