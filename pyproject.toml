@@ -8,7 +8,8 @@ version = "0.1.0"
 description = "Deterministic static security scanner for EVM, Cosmos SDK, and Bitcoin codebases with SARIF v2.1.0 output"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
     {name = "Daniel James Reid"}
 ]
@@ -16,20 +17,34 @@ keywords = ["security", "smart-contracts", "sarif", "evm", "cosmos", "bitcoin"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Security"
 ]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "build>=1.0"]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=6.0",
+    "build>=1.0",
+    "flake8>=7.0",
+    "twine>=6.0",
+]
 
 [project.scripts]
 slyther-analyzer = "slyther_analyzer.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+slyther_analyzer = ["py.typed"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

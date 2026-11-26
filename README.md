@@ -10,6 +10,9 @@ slyther-analyzer scan benchmarks --format sarif --output results.sarif
 pytest
 ```
 
+Python 3.10 through 3.14 are supported and tested runtimes. The CLI uses exit code `0`
+for a clean scan, `1` when findings are present, and `2` for invalid targets.
+
 ## Layout
 
 - `src/slyther_analyzer/` — CLI entry point, heuristic rule scanner, and SARIF v2.1.0 emitter.

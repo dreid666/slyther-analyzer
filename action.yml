@@ -1,0 +1,33 @@
+name: Slyther Analyzer
+description: Scan EVM, Cosmos SDK, and Bitcoin source code and emit SARIF v2.1.0
+author: Daniel James Reid
+
+inputs:
+  target:
+    description: File or directory to scan
+    required: false
+    default: .
+  output:
+    description: SARIF output path
+    required: false
+    default: slyther-analyzer.sarif
+
+outputs:
+  sarif:
+    description: Path to the generated SARIF report
+    value: ${{ inputs.output }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install Slyther Analyzer
+      shell: bash
+      run: python -m pip install --disable-pip-version-check "${{ github.action_path }}"
+    - name: Run Slyther Analyzer
+      shell: bash
+      run: |
+        status=0
+        slyther-analyzer scan "${{ inputs.target }}" --format sarif --output "${{ inputs.output }}" || status=$?
+        if [ "$status" -gt 1 ]; then
+          exit "$status"
+        fi
