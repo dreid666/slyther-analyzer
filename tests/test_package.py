@@ -5,7 +5,7 @@ import slyther_analyzer
 
 def test_package_has_public_version():
     assert isinstance(slyther_analyzer.__version__, str)
-    assert slyther_analyzer.__version__ == "1.0.0"
+    assert slyther_analyzer.__version__ == "1.0.1"
 
 
 def test_package_name_matches_module():

@@ -4,7 +4,7 @@
 - Checked: 2026-11-26
 - Status: **Passing**
 - Results: **14 passed**
-- Release: **1.0.0 candidate**
+- Release: **1.0.1 patch candidate**
 - Benchmark: **4 findings across 3 ecosystems; 100 scans in 0.157 seconds**
 - Package verification:
   - Editable install passed

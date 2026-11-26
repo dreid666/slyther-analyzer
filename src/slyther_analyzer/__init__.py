@@ -1,6 +1,6 @@
 """Slyther Analyzer open-source static security scanner."""
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 from .scanner import Finding, scan_directory, scan_file, scan_path
 
