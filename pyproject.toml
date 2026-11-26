@@ -14,9 +14,12 @@ authors = [
     {name = "Daniel James Reid"}
 ]
 keywords = ["security", "smart-contracts", "sarif", "evm", "cosmos", "bitcoin"]
+urls = {Homepage = "https://github.com/dreid666/slyther-analyzer", Repository = "https://github.com/dreid666/slyther-analyzer", Issues = "https://github.com/dreid666/slyther-analyzer/issues"}
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",

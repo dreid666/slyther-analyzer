@@ -5,9 +5,15 @@ Open-source Python static security scanner for smart contract and blockchain cod
 ## Install & Run
 
 ```bash
-pip install -e ".[dev]"
+pip install slyther-analyzer
 slyther-analyzer scan benchmarks --format sarif --output results.sarif
 pytest
+```
+
+For MCP support:
+
+```bash
+pip install "slyther-analyzer[mcp]"
 ```
 
 Python 3.10 through 3.14 are supported and tested runtimes. The CLI uses exit code `0`
