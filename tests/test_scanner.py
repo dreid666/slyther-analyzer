@@ -78,6 +78,7 @@ def test_benchmark_directory_reports_each_ecosystem():
     assert "SLYTHER-EVM-001" in rule_ids
     assert "SLYTHER-COSMOS-001" in rule_ids
     assert "SLYTHER-BTC-001" in rule_ids
+    assert len(findings) == 4
 
 
 def test_scan_file_and_directory_public_helpers(tmp_path):

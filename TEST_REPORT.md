@@ -3,7 +3,9 @@
 - Repository: `dreid666/slyther-analyzer`
 - Checked: 2026-11-26
 - Status: **Passing**
-- Results: **12 passed; 94% coverage**
+- Results: **14 passed**
+- Release: **1.0.0 candidate**
+- Benchmark: **4 findings across 3 ecosystems; 100 scans in 0.157 seconds**
 - Package verification:
   - Editable install passed
   - Wheel and source distributions built successfully

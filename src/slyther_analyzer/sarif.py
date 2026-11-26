@@ -44,7 +44,7 @@ def sarif_document(findings: Iterable[Finding]) -> dict:
                 "tool": {
                     "driver": {
                         "name": "Slyther Analyzer",
-                        "version": "0.1.0",
+                        "version": "1.0.0",
                         "rules": list(rules.values()),
                     }
                 },
