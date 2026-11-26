@@ -5,11 +5,11 @@ author: Daniel James Reid
 inputs:
   target:
     description: File or directory to scan
-    required: false
+    required: true
     default: .
   output:
     description: SARIF output path
-    required: false
+    required: true
     default: slyther-analyzer.sarif
   fail-on:
     description: Exit non-zero for none, warning, or error findings
