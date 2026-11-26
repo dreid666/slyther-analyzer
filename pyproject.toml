@@ -35,9 +35,11 @@ dev = [
     "flake8>=7.0",
     "twine>=6.0",
 ]
+mcp = ["mcp>=1.0,<2"]
 
 [project.scripts]
 slyther-analyzer = "slyther_analyzer.cli:main"
+slyther-analyzer-mcp = "slyther_analyzer.mcp_server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -27,6 +27,18 @@ Use the repository as an agent in pull requests or pushes:
 The agent scans changed source files on pull requests, writes a GitHub Step Summary,
 publishes workflow annotations, and returns the SARIF path plus finding count as outputs.
 
+## MCP Agent
+
+Install the MCP extra, then use the server from VS Code or another MCP client:
+
+```bash
+pip install -e ".[mcp]"
+slyther-analyzer-mcp
+```
+
+VS Code discovers the workspace server from `.vscode/mcp.json`. The server exposes
+`scan_target`, `scan_changed_files`, and `agent_status` tools.
+
 ## Layout
 
 - `src/slyther_analyzer/` — CLI entry point, heuristic rule scanner, and SARIF v2.1.0 emitter.

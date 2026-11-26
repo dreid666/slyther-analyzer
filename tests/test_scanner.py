@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from slyther_analyzer.cli import main
 from slyther_analyzer.sarif import sarif_document
 from slyther_analyzer.scanner import scan_path
@@ -110,3 +112,18 @@ def test_agent_writes_summary_and_sarif(tmp_path, monkeypatch):
     assert "Slyther Agent" in summary.read_text(encoding="utf-8")
     assert "findings=1" in github_output.read_text(encoding="utf-8")
     assert json.loads(output.read_text(encoding="utf-8"))["runs"][0]["results"]
+
+
+def test_mcp_agent_status_and_scan(tmp_path):
+    pytest.importorskip("mcp")
+    from slyther_analyzer.mcp_server import agent_status, scan_target
+
+    contract = tmp_path / "Treasury.sol"
+    contract.write_text("tx.origin;", encoding="utf-8")
+
+    status = agent_status()
+    result = scan_target(str(contract))
+
+    assert status["name"] == "Slyther Security Agent"
+    assert result["findings"][0]["rule_id"] == "SLYTHER-EVM-001"
+    assert result["sarif"]["runs"][0]["results"]

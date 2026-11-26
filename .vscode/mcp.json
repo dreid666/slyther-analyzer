@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "slyther-analyzer": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "slyther_analyzer.mcp_server"
+      ]
+    }
+  }
+}
