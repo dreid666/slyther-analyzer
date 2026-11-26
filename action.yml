@@ -11,11 +11,22 @@ inputs:
     description: SARIF output path
     required: false
     default: slyther-analyzer.sarif
+  fail-on:
+    description: Exit non-zero for none, warning, or error findings
+    required: false
+    default: warning
+  changed-only:
+    description: Scan only files changed since the base revision
+    required: false
+    default: "true"
 
 outputs:
   sarif:
     description: Path to the generated SARIF report
     value: ${{ inputs.output }}
+  findings:
+    description: Number of security findings detected
+    value: ${{ steps.scan.outputs.findings }}
 
 runs:
   using: composite
@@ -23,11 +34,17 @@ runs:
     - name: Install Slyther Analyzer
       shell: bash
       run: python -m pip install --disable-pip-version-check "${{ github.action_path }}"
-    - name: Run Slyther Analyzer
+    - name: Run Slyther Agent
+      id: scan
       shell: bash
       run: |
         status=0
-        slyther-analyzer scan "${{ inputs.target }}" --format sarif --output "${{ inputs.output }}" || status=$?
+        slyther-analyzer agent "${{ inputs.target }}" \
+          --output "${{ inputs.output }}" \
+          --base "${{ github.event.pull_request.base.sha }}" \
+          --head "${{ github.event.pull_request.head.sha }}" \
+          ${{ inputs.changed-only == 'true' && '--changed-only' || '' }} \
+          --fail-on "${{ inputs.fail-on }}" || status=$?
         if [ "$status" -gt 1 ]; then
           exit "$status"
         fi

@@ -95,3 +95,18 @@ def test_module_entry_point_runs(capsys):
         runpy.run_module("slyther_analyzer", run_name="__main__")
     except SystemExit as exc:
         assert exc.code == 2
+
+
+def test_agent_writes_summary_and_sarif(tmp_path, monkeypatch):
+    contract = tmp_path / "Treasury.sol"
+    contract.write_text("tx.origin;", encoding="utf-8")
+    output = tmp_path / "agent.sarif"
+    summary = tmp_path / "summary.md"
+    github_output = tmp_path / "github-output.txt"
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
+    monkeypatch.setenv("GITHUB_OUTPUT", str(github_output))
+
+    assert main(["agent", str(tmp_path), "--output", str(output), "--fail-on", "none"]) == 0
+    assert "Slyther Agent" in summary.read_text(encoding="utf-8")
+    assert "findings=1" in github_output.read_text(encoding="utf-8")
+    assert json.loads(output.read_text(encoding="utf-8"))["runs"][0]["results"]

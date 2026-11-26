@@ -13,6 +13,20 @@ pytest
 Python 3.10 through 3.14 are supported and tested runtimes. The CLI uses exit code `0`
 for a clean scan, `1` when findings are present, and `2` for invalid targets.
 
+## GitHub Actions Agent
+
+Use the repository as an agent in pull requests or pushes:
+
+```yaml
+- uses: dreid666/slyther-analyzer@main
+  with:
+    target: .
+    output: slyther-analyzer.sarif
+```
+
+The agent scans changed source files on pull requests, writes a GitHub Step Summary,
+publishes workflow annotations, and returns the SARIF path plus finding count as outputs.
+
 ## Layout
 
 - `src/slyther_analyzer/` — CLI entry point, heuristic rule scanner, and SARIF v2.1.0 emitter.
